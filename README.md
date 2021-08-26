@@ -13,3 +13,5 @@ The comunication is done by transmission half-duplex through I2C in between FPGA
  *Creation of the state machine to power up the ADV7513 by writing on its registers<br/>
  *Get VGA to print in the screen<br/>
  *Set VGA to read its pixels from a memory implemented on the board<br/>
+ 
+ The main goal of this personal project is to obviously improve skills on the many subjects involved.<br/>
