@@ -1,5 +1,5 @@
 # ADV7513-I2C_controller
-#VHDL Controller for ADV7513, Cyclone V VGA throught HDMI is the main goal
+VHDL Controller for ADV7513, Cyclone V VGA throught HDMI is the main goal
 
 This is a personal project in which my goals are to have an Architecture that have a full comunication hardware with the ADV7513 installed in my Cyclone V FPGA.
 The comunication is done by transmission half-duplex through I2C in between FPGA and the Chip to command the AD7513. Bellow it is what is done so far :
