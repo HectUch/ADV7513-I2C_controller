@@ -1,0 +1,49 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/Estudo/My Projects/hdmi_cv
+Ehdmi_i2c
+Z0 w1629994490
+Z1 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z2 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z3 dD:/Estudo/My Projects/hdmi_i2c
+Z4 8D:/Estudo/My Projects/hdmi_i2c/hdmi_i2c.vhd
+Z5 FD:/Estudo/My Projects/hdmi_i2c/hdmi_i2c.vhd
+l0
+L4
+VEz3hSC3XAVh6BlLN>=kWD3
+!s100 TXMX<jT7MSgCLG5G2@^9l2
+Z6 OV;C;10.5b;63
+32
+Z7 !s110 1629996246
+!i10b 1
+Z8 !s108 1629996246.000000
+Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/Estudo/My Projects/hdmi_i2c/hdmi_i2c.vhd|
+Z10 !s107 D:/Estudo/My Projects/hdmi_i2c/hdmi_i2c.vhd|
+!i113 1
+Z11 o-work work -2002 -explicit
+Z12 tExplicit 1 CvgOpt 0
+Ahdmi_i2c_arch
+R1
+R2
+Z13 DEx4 work 8 hdmi_i2c 0 22 Ez3hSC3XAVh6BlLN>=kWD3
+l38
+L20
+VPWJMXA:C;VD446V>[JR;n3
+!s100 jOUn]=OB1`G4f1<:POm6e3
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12

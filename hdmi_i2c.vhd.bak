@@ -1,0 +1,125 @@
+Library ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY hdmi_I2C IS
+
+	PORT( 
+			clk 	: in std_logic;
+			reset : in std_logic;
+			start_transf: in std_logic;
+			rw_bit : in std_logic;			
+			d_byte : in std_logic_vector(6 downto 0);
+			addr_byte :  in std_logic_vector(6 downto 0);
+			SDA,SCL : INOUT std_logic;
+			PD,busy,ready, Fail: out std_logic			
+		);
+		
+END hdmi_I2C;
+
+
+ARCHITECTURE I2C_Interface_Arch OF I2C_Interface IS
+   
+	TYPE STATE_TYPE IS (IDLE, START, TRANSF_SLAVE_ADDR, TRANSF_ADDR , TRANSF_DATA,ACK);
+   SIGNAL state   : STATE_TYPE;
+	signal start_bit: std_logic := '0';
+	signal slave_addr : std_logic_vector(6 downto 0) := "0111001"; --0x72 PD = 0, 0x7A PD = 1
+	signal send_addr : std_logic_vector(1 downto 0) := "00"; -- 00 : Address , -- 01 Register Adress , --10 Data
+	signal count,pstate : natural := 0;
+	signal slave_addr_word,base_addr_word,data_byte_word : std_logic_vector(7 downto 0) := (others => '0');
+	signal SDA_out,control_signal: std_logic <= '1';
+	
+	signal clk_25mhz,clk_400khz : std_logic <= '1';
+	signal count_400khz : natural <= 124;
+	signal count_25mhz : natural <= 1;
+	signal start_count : natural <= 4;
+	
+begin
+	clk_divider : process(clk,reset)
+	begin
+	if(reset = '1') then
+		count_25mhz <= 1;
+		count_400khz <= 125;
+		clk_25mhz <= '1';
+		clk_400khz <= '1';
+	elsif (clk'EVENT AND clk = '1') then
+		if(start_transf = '1') then
+			if(count_400khz = 0) then
+				count_400khz <= 125;
+				clk_400khz <= not clk_400khz;
+			else
+				count_400khz <= count_400khz - 1;
+			end if;
+		else
+			count_400khz <= 125;
+			clk_400khz <= '1';
+		end if;
+
+		if count_25mhz = 0 then
+			clk_25mhz <= not clk_25mhz;
+			count_25mhz <= 1;
+		else
+			clk_25mhz <= clk_25mhz - 1;
+		end if;		
+		
+	end if;	
+	
+	end process; --clock divider;
+
+
+	PROCESS (clk, reset)
+   BEGIN
+      IF reset = '1' THEN
+			busy <= '0';
+			pstate <= 0;
+         state <= IDLE;
+			SCL <= '1';
+			SDA <= '1';			
+		ELSIF (clk'EVENT AND clk = '1') THEN
+         CASE state IS
+            WHEN IDLE=>
+               IF start_transf = '1' THEN
+						SDA_out <= start_bit; -- ZERO('0')
+						Busy <= '1';
+						slave_addr_word <= slave_addr & '0';
+						base_addr_word	 <= addr_byte & wr_bit;
+						base_addr_word	 <= d_byte & wr_bit;
+						state <= START;
+					ELSE
+						SCL <= '1';
+						SDA_out <= '1';
+						busy <= '0';
+						state <= IDLE;
+               END IF;
+				WHEN START =>
+					start_count <= start_count - 1;
+					
+					if(start_count = 0)then
+						start_count <= 4;
+						SCL <= CLK_400khz;
+						state <= TRANSF_SLAVE_ADDR;
+					end if;
+					
+           	WHEN OTHERS =>
+				
+         END CASE;
+			
+			
+	END IF;
+
+	END PROCESS;
+	
+	PROCESS (clk_400khz)
+	begin
+		if(clk_400khz'EVENT AND clk_400khz = '0')then
+			SDA <= slave_addr_word(7);
+		
+		end if;
+	
+	
+	end process;
+
+	
+	SDA <= SDA_out when state /= ACK else 'Z' ;
+	PD <= '0';
+
+END I2C_Interface_Arch;
